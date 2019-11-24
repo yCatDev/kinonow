@@ -1,4 +1,4 @@
-f= open("index.html","w+");
+f= open("index.html","r");
 
 for line in f:
     print(line);
