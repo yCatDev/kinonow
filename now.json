@@ -6,6 +6,6 @@
         "use": "@now/node-server"
     }],
 	"routes": [
-		{ "src": "/(.*)", "dest": "app.py" }
+		{ "src": "/(.*)", "dest": "index.js" }
 	]
 }
