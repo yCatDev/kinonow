@@ -3,13 +3,35 @@ var router = express.Router();
 var parser = require('./parser');
 
 
+
 var output = "";
-parser.Initialize();
+var calendardates = [];
+var calendarnames = [];
+
+var days = ['Неділя', 'Понеділок', 'Вторник', 'Середа', 'Четверг', 'Пятниця', 'Суббота'];
+var date = new Date();
 
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: output });
-});
+
+
+
+async function generatePage() {
+
+  await parser.Initialize().then( (htmlFilms) => {
+    for (let i = 0; i < 7; i++) {
+      calendardates[i] = "Дата " + date.toISOString().substring(0, 10);
+      calendarnames[i] = days[date.getDay()];
+      date.setDate(date.getDate() + 1);
+  
+    }           
+    
+    router.get('/', function (req, res, next) {
+      res.render('index', { title: output, cdates: calendardates, cnames: calendarnames, html: htmlFilms });
+    });
+    
+  });
+  
+}
+generatePage();
 
 module.exports = router;
