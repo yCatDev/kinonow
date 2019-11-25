@@ -17,6 +17,7 @@ var date = new Date();
 
 async function generatePage() {
 
+  console.log("Init");
   await parser.Initialize().then( (htmlFilms) => {
     for (let i = 0; i < 7; i++) {
       calendardates[i] = "Дата " + date.toISOString().substring(0, 10);
@@ -24,7 +25,7 @@ async function generatePage() {
       date.setDate(date.getDate() + 1);
   
     }           
-    
+    console.log("Drawing");
     router.get('/', function (req, res, next) {
       res.render('index', { title: output, cdates: calendardates, cnames: calendarnames, html: htmlFilms });
     });

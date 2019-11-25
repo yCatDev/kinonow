@@ -119,19 +119,24 @@ function cleanup()
 }
 
 async function Initialize() {
+    console.log("Step 1: getting data");
     await getTitleListData().then(res => {
         data = res
     });
+
+    console.log("Step 2: proccesing data");
     getTitleNames();
     getTheatres();
     getPrices();
     getDates();    
     cleanup();
-    
+
+    console.log("Step 3: getting links");
     await getLinks().then(res => {
         links = res
     });
   
+    console.log("Step 4: returning films");
     htmlFilms = await composeFilmButtonHTML(composeFilmButtonData());    
     
     return htmlFilms;    
