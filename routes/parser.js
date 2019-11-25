@@ -66,13 +66,12 @@ function composeFilmButtonData()
 async function getPicUrl(name)
 {    
     let link = "http://kino.i.ua"+(links.find(a =>a.includes(name)).split('@')[1]);
-    console.log(link);
+    
     await new Promise((resolve, reject) => {
         needle.get(link, function (err, res) {
             if (err)
                 reject(err);
-            const $ = cheerio.load(res.body);
-            console.log($('.preview').find('img').attr('src'));
+            const $ = cheerio.load(res.body);            
             resolve($('.preview').find('img').attr('src'));
         });
 
@@ -201,8 +200,7 @@ async function composeFilmButtonHTML(data)
 
     for (let i = 0; i<data.length; i++)
     {
-        let img_link = "";
-        console.log(data[i][0]);
+        let img_link = "";        
         await getPicUrl(data[i][0]).then(res => {img_link = res;});
         let string = []; 
         string.push(`<div class="film-button">`);
