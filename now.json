@@ -1,13 +1,10 @@
   
 {
-	"version": 2,
-	"builds": 
-	[{
-        "src": "/bin/www",
-        "use": "@now/node-server"
-	   }],
-	   "routes": [{
-		"src": "/.*",
-		"dest": "/bin/www"
-	}]
+	"version": 1,
+	"scripts": {
+		"start": "serve --single --cache=60000"
+	  },
+	  "dependencies": {
+		"serve": "latest"
+	  }
 }
