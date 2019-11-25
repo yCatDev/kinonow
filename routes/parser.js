@@ -1,8 +1,8 @@
 var needle = require('needle');
 const cheerio = require('cheerio')
-var composer = require('./composer');
 
-const url = 'http://kino.i.ua/afisha/?city=12201&date=26-11-2019';
+
+const url = 'http://kino.i.ua/afisha/';
 
 var data = [];
 let names = [];
