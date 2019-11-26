@@ -17,7 +17,9 @@ async function generatePage() {
 
   console.log("Init");
 
-    router.get('/:date', async function (req, res, next) {
+    router.get('/:date?', async function (req, res, next) {
+      if (req.params.date == undefined)
+        req.params.date = dateFormat(new Date(), "dd-mm-yyyy");
       await parser.Initialize(req.params.date).then( (htmlFilms) => {       
        var calendardates = [];
        var calendarnames = [];
