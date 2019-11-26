@@ -2,7 +2,7 @@ var needle = require('needle');
 const cheerio = require('cheerio')
 
 
-const url = 'http://kino.i.ua/afisha/';
+const url = 'http://kino.i.ua/afisha/?city=12201';
 
 var data = [];
 let names = [];
