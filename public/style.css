@@ -214,6 +214,7 @@ img{
     bottom: 10%;
     border-radius: 10px;
     overflow:scroll;
+    display: none;
 }
 
 .window-top

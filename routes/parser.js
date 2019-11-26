@@ -1,6 +1,6 @@
 var needle = require('needle');
 const cheerio = require('cheerio')
-
+var cyrillicToTranslit = require('cyrillic-to-translit-js');
 const baseurl = 'http://kino.i.ua/afisha/?city=12201&date=';
 let url = '';
 
@@ -52,8 +52,23 @@ function composeFilmButtonData() {
 
         d.push(
             [names[i], mathMiddle(prices[i]), theatres[i].length,
-            Array.from(new Set(dates[i])).slice(0, 5).join(',') + "...",
+            Array.from(new Set(dates[i])).slice(0, 5).join(',') + "..."
             ]
+        );
+
+    }
+
+    return d;
+}
+function composeFilmWindowData() {
+    let d = [];
+
+    for (let i = 0; i < names.length; i++) {
+
+        d.push(
+            [names[i], mathMiddle(prices[i]), theatres[i].length,
+            Array.from(new Set(dates[i])).slice(0, 5).join(',') + "...",
+            theatres[i], prices[i]]
         );
 
     }
@@ -141,8 +156,7 @@ async function Initialize(date) {
         getPrices(),
         getDates()
     ]);
-    cleanup();
-
+    cleanup();    
     console.log("Step 3: getting links");
     await getLinks().then(res => {
         links = res
@@ -166,15 +180,6 @@ function getPrices() {
     for (let i = 0; i < names.length - 1; i++) {
         prices.push(data[4].slice(namesIndexes[i] + 1, namesIndexes[i + 1]));
     }
-    /*for (let i = 0; i<names.length-1; i++)
-    {
-        for (let j = 0; j<tmp.length-1; j++)
-        {
-            if (tmp[i][j]!=undefined){
-                
-                prices.push ([tmp[i][j].split(' ')[0]]);}
-        }
-    }*/
 }
 
 function getDates() {
@@ -215,6 +220,11 @@ async function composeFilmButtonHTML(data) {
 
     for (let i = 0; i < data.length; i++) {
         let img_link = "";
+        
+        let moreLink = "https://vkino.ua/ua/show/"+cyrillicToTranslit()
+        .transform(
+            data[i][0]).replace(' ','-')+"/kharkov";
+
         await getPicUrl(data[i][0]).then(res => { img_link = res; });
         let string = [];
         string.push(`<div class="film-button">`);
@@ -237,7 +247,7 @@ async function composeFilmButtonHTML(data) {
         string.push(`        <p class="fb_desc">Доступні кіносеанси: </p>`);
         string.push(`        <p class="fb_desc_value">${data[i][3]}</p>`);
         string.push(`    </div>`);
-        string.push(`    <p class="more">Натисніть для детальнішої інформації</p>`);
+        string.push(`    <a href='${moreLink}' class="more"> Детальніше...</a>`);
         string.push(`</div>`);
         string.push(`</div>`);
         string.push(`<br>`);
@@ -249,7 +259,8 @@ async function composeFilmButtonHTML(data) {
 }
 
 
+
 module.exports.Initialize = Initialize;
 module.exports.htmlFilms = htmlFilms;
 module.exports.composeFilmButtonData = composeFilmButtonData;
-module.exports.data = data;
+ 
