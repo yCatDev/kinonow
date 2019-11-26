@@ -3,7 +3,7 @@
 
 <head>
     <title>
-        <%= title %>
+        KinoNow
     </title>
     
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -19,36 +19,43 @@
                 <p class="welcome-text">Онлайн афіша кинотеатрів Харькову</p>
             </div>
             <div class="bottom">
-                <p class="hint">Оберіть дату</p>
+                <p class="hint">Обрана дата: <%= seldate %></p>
                 <div class="dates">
+                  <a href=<%= cdates[0] %>>
                     <div class="date-button">
                         <p class="week-name"><%= cnames[0] %></p>
-                        <p class="date"><%= cdates[0] %></p>
-                    </div>
+                        <p class="date">Дата: <%= cdates[0] %></p>
+                    </div></a>
+                    <a href=<%= cdates[1] %>>
                     <div class="date-button">
                         <p class="week-name"><%= cnames[1] %></p>
-                        <p class="date"><%= cdates[1] %></p>
-                    </div>
+                        <p class="date">Дата: <%= cdates[1] %></p>
+                    </div></a>
+                    <a href=<%= cdates[2] %>>
                     <div class="date-button">
                         <p class="week-name"><%= cnames[2] %></p>
-                        <p class="date"><%= cdates[2] %></p>
-                    </div>
+                        <p class="date">Дата: <%= cdates[2] %></p>
+                    </div></a>
+                    <a href=<%= cdates[3] %>>
                     <div class="date-button">
                         <p class="week-name"><%= cnames[3] %></p>
-                        <p class="date"><%= cdates[3] %></p>
-                    </div>
+                        <p class="date">Дата: <%= cdates[3] %></p>
+                    </div></a>
+                    <a href=<%= cdates[4] %>>
                     <div class="date-button">
                         <p class="week-name"><%= cnames[4] %></p>
-                        <p class="date"><%= cdates[4] %></p>
-                    </div>
+                        <p class="date">Дата: <%= cdates[4] %></p>
+                    </div></a>
+                    <a href=<%= cdates[5] %>>
                     <div class="date-button">
                         <p class="week-name"><%= cnames[5] %></p>
-                        <p class="date"><%= cdates[5] %></p>
-                    </div>
+                        <p class="date">Дата: <%= cdates[5] %></p>
+                    </div></a>
+                    <a href=<%= cdates[6] %>>
                     <div class="date-button">
                         <p class="week-name"><%= cnames[6] %></p>
-                        <p class="date"><%= cdates[6] %></p>
-                    </div>
+                        <p class="date">Дата: <%= cdates[6] %></p>
+                    </div></a>
                 </div>
 
             </div>

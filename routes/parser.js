@@ -1,8 +1,8 @@
 var needle = require('needle');
 const cheerio = require('cheerio')
 
-
-const url = 'http://kino.i.ua/afisha/?city=12201';
+const baseurl = 'http://kino.i.ua/afisha/?city=12201&date=';
+let url = '';
 
 var data = [];
 let names = [];
@@ -118,7 +118,21 @@ function cleanup()
     }
 }
 
-async function Initialize() {
+function reset()
+{
+    data = [];
+    names = [];
+    namesIndexes = [];
+    theatres = [];
+    prices = [];
+    dates = [];
+    pictures = [];
+    links = [];
+}
+
+async function Initialize(date) {
+    url+=baseurl+date;
+    reset();
     console.log("Step 1: getting data");
     await getTitleListData().then(res => {
         data = res
