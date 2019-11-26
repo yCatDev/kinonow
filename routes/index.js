@@ -29,6 +29,7 @@ async function generatePage() {
     router.get('/', function (req, res, next) {
       res.render('index', { title: output, cdates: calendardates, cnames: calendarnames, html: htmlFilms });
     });
+    console.log("Ready");
     
   });
   
