@@ -1,3 +1,25 @@
-<h1><%= message %></h1>
-<h2><%= error.status %></h2>
-<pre><%= error.stack %></pre>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        KinoNow
+    </title>
+    
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="https://kit.fontawesome.com/726e03ea95.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="header">
+        <div class="block-center">
+            <div class="top">
+                <p class="h">KhinoNow</p>
+                <br>
+                <p class="welcome-text">ОШИБКА</p>
+            </div>
+            <div class="bottom">
+                <br>
+                    <p class="hint">Сайт временно не работает</p>
+                    <p class="hint"><%= message %></p>

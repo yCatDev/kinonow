@@ -272,6 +272,7 @@ function equals(str1, str2) {
 async function composeFilmButtonHTML(data) {
     let html = "";
 
+    if (data.length>0){
     for (let i = 0; i < data.length; i++) {
 
         let img_link = "";
@@ -290,8 +291,8 @@ async function composeFilmButtonHTML(data) {
         string.push(`    </div>`);
         string.push(`    <br>`);
         string.push(`    <div class="group">`);
-        string.push(`        <i class="fas fa-money-bill-wave"></i><p class="fb_desc space">Средняя цена билета:<br> </p>`);
-        string.push(`        <p class="fb_desc_value space">${data[i][1]}</p>`);
+        string.push(`        <i class="fas fa-hryvnia"></i><p class="fb_desc space">Средняя цена билета:<br> </p>`);
+        string.push(`        <p class="fb_desc_value space">${data[i][1]} грн.</p>`);
         string.push(`    </div>`);
         string.push(`    <div class="group">`);
         string.push(`        <i class="fas fa-film"></i><p class="fb_desc space">Доступные кинотеатры: </p>`);
@@ -308,7 +309,12 @@ async function composeFilmButtonHTML(data) {
 
 
         html += string.join('');
+    }}else{
+        let string = [];
+        string.push(`<p class="welcome-text"> Извините, но все киносеансы закончились </p>`);
+        html += string.join('');
     }
+
     return html;
 }
 

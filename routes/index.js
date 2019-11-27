@@ -3,14 +3,7 @@ var router = express.Router();
 var parser = require('./parser');
 var dateFormat = require('dateformat');
 
-
-
-
 var days = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятниця', 'Суббота'];
-
-
-
-
 
 
 function generatePage() {
