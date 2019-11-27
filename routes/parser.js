@@ -39,7 +39,8 @@ async function getTitleListData() {
 function getTitleNames() {
 
     for (let i = 0; i < data[4].length; i++) {
-        if (isNaN(parseInt(data[4][i][0])) && data[4][i][0] != undefined) {
+        if (data[4][i][0] != undefined && !data[4][i].includes("грн.")) {
+            
             names.push(data[4][i]);
             namesIndexes.push(i);
         }
@@ -53,7 +54,7 @@ function composeFilmButtonData() {
 
     for (let i = 0; i < names.length; i++) {
         let buyLink = findLink(names[i]);                
-
+        if (prices[i]!=0 && buyLink!=undefined)
         d.push(
             [names[i], mathMiddle(prices[i]), theatres[i].length,
             Array.from(new Set(dates[i])).slice(0, 3).join(',') + "...", buyLink]
@@ -64,13 +65,15 @@ function composeFilmButtonData() {
 }
 function findLink(name) {
 
-    //console.log(' ');
+   // console.log(' ');
     for (let j = 0; j < buyLinks.length; j++) {
-        //console.log(`${buyLinks[j].split('@')[0]} ${name}`);
+       // console.log(`${buyLinks[j].split('@')[0]} = ${name}`);
         if (equals(buyLinks[j].split('@')[0], name) || buyLinks[j].split('@')[0].includes(name))
         {
             //console.log("Finded "+`https://vkino.ua${buyLinks[j].split('@')[1]}`);
-           return `https://vkino.ua${buyLinks[j].split('@')[1]}`;
+            let res = `https://vkino.ua${buyLinks[j].split('@')[1]}`
+            buyLinks.splice(j,1);
+           return res;
         }
     }
 }
@@ -133,6 +136,7 @@ function reset() {
     dates = [];
     pictures = [];
     links = [];
+    buyLinks = [];
 }
 function parallel(middlewares) {
     return function (req, res, next) {
@@ -143,8 +147,8 @@ function parallel(middlewares) {
 }
 async function Initialize(date) {
     url += baseurl + date;
-    current_date = dateFormat(Date.parse(date), "yyyy-mm-dd");
-    console.log(current_date);
+    current_date = date;
+    //console.log(current_date);
     reset();
     console.log("Step 1: getting data");
     await getTitleListData().then(res => {
@@ -163,6 +167,7 @@ async function Initialize(date) {
     await getLinks().then(res => {
         links = res
     });
+    if (buyLinks.length==0)
     await getBuyLink()
         .then(res => {
             buyLinks = res;
@@ -220,21 +225,21 @@ async function getLinks() {
 
 async function getBuyLink() {
     let result = [];
-
+    let url = `https://vkino.ua/ru/afisha/kharkov?date=${current_date}#`;
     await new Promise((resolve, reject) => {
-        request(`https://vkino.ua/ru/afisha/kharkov?date=${current_date}#`, function (err, res, body) {
+        request(url, async function (err, res, body) {
             if (err)
                 reject(err);
-
+            //console.log(url);
             var $ = cheerio.load(body);
             let spans = $('span');
             let r = [];
 
-            $(spans).each(function (i, span) {
+            await $(spans).each(function (i, span) {
                 
                 if ($(span).parent().attr('class') == 'film-title')
-                {
-                    console.log($(span).text());
+                {                    
+                    //console.log($(span).text());
                     r.push($(span).text() + '@' + $(span).parent().attr('href'));}
                 
             });
@@ -255,7 +260,7 @@ function equals(str1, str2) {
         if (str1[i] == str2[i])
             c++;
     }
-    if (c >= str2.length / 3)
+    if (c >= str2.length / 2)
         return true;
     else{
         c = 0;
