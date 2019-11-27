@@ -1,9 +1,10 @@
 var needle = require('needle');
-const cheerio = require('cheerio')
+const cheerio = require('cheerio');
+const request = require('request');
 var cyrillicToTranslit = require('cyrillic-to-translit-js');
 const baseurl = 'http://kino.i.ua/afisha/?city=12201&date=';
 let url = '';
-
+const https = require('https');
 var data = [];
 let names = [];
 let namesIndexes = [];
@@ -12,8 +13,10 @@ let prices = [];
 let dates = [];
 let pictures = [];
 let links = [];
-
+let current_date = "";
 let htmlFilms = "";
+let buyLinks = "";
+var dateFormat = require('dateformat');
 
 async function getTitleListData() {
     let res;
@@ -49,32 +52,29 @@ function composeFilmButtonData() {
     let d = [];
 
     for (let i = 0; i < names.length; i++) {
+        let buyLink = findLink(names[i]);                
 
         d.push(
             [names[i], mathMiddle(prices[i]), theatres[i].length,
-            Array.from(new Set(dates[i])).slice(0, 5).join(',') + "..."
-            ]
+            Array.from(new Set(dates[i])).slice(0, 3).join(',') + "...", buyLink]
         );
-
     }
 
     return d;
 }
-function composeFilmWindowData() {
-    let d = [];
+function findLink(name) {
 
-    for (let i = 0; i < names.length; i++) {
-
-        d.push(
-            [names[i], mathMiddle(prices[i]), theatres[i].length,
-            Array.from(new Set(dates[i])).slice(0, 5).join(',') + "...",
-            theatres[i], prices[i]]
-        );
-
+    //console.log(' ');
+    for (let j = 0; j < buyLinks.length; j++) {
+        //console.log(`${buyLinks[j].split('@')[0]} ${name}`);
+        if (equals(buyLinks[j].split('@')[0], name) || buyLinks[j].split('@')[0].includes(name))
+        {
+            //console.log("Finded "+`https://vkino.ua${buyLinks[j].split('@')[1]}`);
+           return `https://vkino.ua${buyLinks[j].split('@')[1]}`;
+        }
     }
-
-    return d;
 }
+
 
 async function getPicUrl(name) {
     let link = "http://kino.i.ua" + (links.find(a => a.includes(name)).split('@')[1]);
@@ -143,6 +143,8 @@ function parallel(middlewares) {
 }
 async function Initialize(date) {
     url += baseurl + date;
+    current_date = dateFormat(Date.parse(date), "yyyy-mm-dd");
+    console.log(current_date);
     reset();
     console.log("Step 1: getting data");
     await getTitleListData().then(res => {
@@ -156,15 +158,18 @@ async function Initialize(date) {
         getPrices(),
         getDates()
     ]);
-    cleanup();    
+    cleanup();
     console.log("Step 3: getting links");
     await getLinks().then(res => {
         links = res
     });
-
+    await getBuyLink()
+        .then(res => {
+            buyLinks = res;
+        });
+        
     console.log("Step 4: returning films");
     htmlFilms = await composeFilmButtonHTML(composeFilmButtonData());
-
     return htmlFilms;
 }
 
@@ -213,19 +218,67 @@ async function getLinks() {
     return result;
 }
 
+async function getBuyLink() {
+    let result = [];
 
+    await new Promise((resolve, reject) => {
+        request(`https://vkino.ua/ru/afisha/kharkov?date=${current_date}#`, function (err, res, body) {
+            if (err)
+                reject(err);
+
+            var $ = cheerio.load(body);
+            let spans = $('span');
+            let r = [];
+
+            $(spans).each(function (i, span) {
+                
+                if ($(span).parent().attr('class') == 'film-title')
+                {
+                    console.log($(span).text());
+                    r.push($(span).text() + '@' + $(span).parent().attr('href'));}
+                
+            });
+        
+            resolve(r);
+        });
+    }).then(res1 => {
+        result = res1;
+    });
+   // console.log(result);
+    return result;
+}
+
+function equals(str1, str2) {
+    let c = 0;
+    for (let i = 0; i < str2.length; i++) {
+
+        if (str1[i] == str2[i])
+            c++;
+    }
+    if (c >= str2.length / 3)
+        return true;
+    else{
+        c = 0;
+        for (let i = 0; i < str1.split(' ').length; i++) {
+            if (str2.includes(str1.split(' ')[i]))
+                c++;
+        }
+        return c >= str1.split(' ').length / 2;
+    }
+}
 
 async function composeFilmButtonHTML(data) {
     let html = "";
 
     for (let i = 0; i < data.length; i++) {
+
         let img_link = "";
-        
-        let moreLink = "https://vkino.ua/ua/show/"+cyrillicToTranslit()
-        .transform(
-            data[i][0]).replace(' ','-')+"/kharkov";
+
+        let moreLink = "";
+
 
         await getPicUrl(data[i][0]).then(res => { img_link = res; });
+        //console.log(data[i]);
         let string = [];
         string.push(`<div class="film-button">`);
         string.push(` <img src="${img_link}">`);
@@ -247,7 +300,7 @@ async function composeFilmButtonHTML(data) {
         string.push(`        <p class="fb_desc">Доступні кіносеанси: </p>`);
         string.push(`        <p class="fb_desc_value">${data[i][3]}</p>`);
         string.push(`    </div>`);
-        string.push(`    <a href='${moreLink}' class="more"> Детальніше...</a>`);
+        string.push(`    <a href='${data[i][4]}' class="more"> Детальніше...</a>`);
         string.push(`</div>`);
         string.push(`</div>`);
         string.push(`<br>`);
@@ -263,4 +316,3 @@ async function composeFilmButtonHTML(data) {
 module.exports.Initialize = Initialize;
 module.exports.htmlFilms = htmlFilms;
 module.exports.composeFilmButtonData = composeFilmButtonData;
- 
