@@ -283,7 +283,7 @@ async function composeFilmButtonHTML(data) {
         await getPicUrl(data[i][0]).then(res => { img_link = res; });
         //console.log(data[i]);
         let string = [];
-        string.push(`<div class="film-button">`);
+        string.push(`<div class="film-button animated fadeIn delay-1s">`);
         string.push(` <img src="${img_link}">`);
         string.push(`<div class="text">`);
         string.push(`   <div class="group">`);
