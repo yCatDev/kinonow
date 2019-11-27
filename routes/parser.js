@@ -158,20 +158,20 @@ async function Parse(date) {
         getTitleNames(),
         getTheatres(),
         getPrices(),
-        getDates()
+        getDates(),
+        await getLinks().then(res => {
+            links = res
+        }), 
+        await getBuyLink()
+        .then(res => {
+            buyLinks = res;
+        })   
     ]);//Обрабатываем их
     cleanup(); //Избавляемся от ненужных
     console.log("Step 3: getting links");
-    await getLinks().then(res => {
-        links = res
-    });     //Получаем ссылки на картинки фильмов
-    if (buyLinks.length==0)
-    await getBuyLink()
-        .then(res => {
-            buyLinks = res;
-        });     //Получаем ссылки на покупку билетов
     console.log("Step 4: returning films");
     htmlFilms = await composeFilmButtonHTML(composeFilmButtonData()); //Готовим данные для выдачи на страницу
+    
     return htmlFilms;
 }
 
@@ -221,6 +221,7 @@ async function getLinks() {
 }
 
 async function getBuyLink() {
+    if (buyLinks.length==0){
     let result = [];
     let url = `https://vkino.ua/ru/afisha/kharkov?date=${current_date}#`;
     await new Promise((resolve, reject) => {
@@ -232,7 +233,7 @@ async function getBuyLink() {
             let spans = $('span');
             let r = [];
 
-            await $(spans).each(function (i, span) {
+            $(spans).each(function (i, span) {
                 
                 if ($(span).parent().attr('class') == 'film-title')
                 {                    
@@ -247,7 +248,7 @@ async function getBuyLink() {
         result = res1;
     });
    // console.log(result);
-    return result;
+    return result;}
 }
 
 function equals(str1, str2) {
