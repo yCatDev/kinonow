@@ -54,10 +54,10 @@ function composeFilmButtonData() {
 
     for (let i = 0; i < names.length; i++) {
         let buyLink = findLink(names[i]);                
-        if (prices[i]!=0 && buyLink!=undefined)
+            if (prices[i]!=0 && buyLink!=undefined)
         d.push(
             [names[i], mathMiddle(prices[i]), theatres[i].length,
-            Array.from(new Set(dates[i])).slice(0, 3).join(',') + "...", buyLink]
+            Array.from(new Set(dates[i])).join(', ') + "...", buyLink]
         );
     }
 
@@ -145,36 +145,33 @@ function parallel(middlewares) {
         }, next);
     };
 }
-async function Initialize(date) {
-    url += baseurl + date;
-    current_date = date;
-    //console.log(current_date);
-    reset();
+async function Parse(date) {
+    url += baseurl + date; //Генерируем ссылку на поиск
+    current_date = date;   //Запоминаем дату поиска
+    reset();    //Очищаем данные после прошлых парсов
     console.log("Step 1: getting data");
     await getTitleListData().then(res => {
         data = res
-    });
-
+    }); //Получаем данные из сайта
     console.log("Step 2: proccesing data");
     parallel([
         getTitleNames(),
         getTheatres(),
         getPrices(),
         getDates()
-    ]);
-    cleanup();
+    ]);//Обрабатываем их
+    cleanup(); //Избавляемся от ненужных
     console.log("Step 3: getting links");
     await getLinks().then(res => {
         links = res
-    });
+    });     //Получаем ссылки на картинки фильмов
     if (buyLinks.length==0)
     await getBuyLink()
         .then(res => {
             buyLinks = res;
-        });
-        
+        });     //Получаем ссылки на покупку билетов
     console.log("Step 4: returning films");
-    htmlFilms = await composeFilmButtonHTML(composeFilmButtonData());
+    htmlFilms = await composeFilmButtonHTML(composeFilmButtonData()); //Готовим данные для выдачи на страницу
     return htmlFilms;
 }
 
@@ -289,23 +286,22 @@ async function composeFilmButtonHTML(data) {
         string.push(` <img src="${img_link}">`);
         string.push(`<div class="text">`);
         string.push(`   <div class="group">`);
-        string.push(`        <p class="fb_desc_value">${data[i][0]}</p>`);
+        string.push(`        <p class="fb_desc_value film-title">${data[i][0]}</p>`);
         string.push(`    </div>`);
         string.push(`    <br>`);
-        string.push(`    <br>`);
         string.push(`    <div class="group">`);
-        string.push(`        <p class="fb_desc">Середня ціна квитка: </p>`);
-        string.push(`        <p class="fb_desc_value">${data[i][1]}</p>`);
+        string.push(`        <i class="fas fa-money-bill-wave"></i><p class="fb_desc space">Средняя цена билета:<br> </p>`);
+        string.push(`        <p class="fb_desc_value space">${data[i][1]}</p>`);
         string.push(`    </div>`);
         string.push(`    <div class="group">`);
-        string.push(`        <p class="fb_desc">Доступні кінотеатри: </p>`);
-        string.push(`        <p class="fb_desc_value">${data[i][2]}</p>`);
+        string.push(`        <i class="fas fa-film"></i><p class="fb_desc space">Доступные кинотеатры: </p>`);
+        string.push(`        <p class="fb_desc_value space">${data[i][2]}</p>`);
         string.push(`    </div>`);
         string.push(`    <div class="group">`);
-        string.push(`        <p class="fb_desc">Доступні кіносеанси: </p>`);
-        string.push(`        <p class="fb_desc_value">${data[i][3]}</p>`);
+        string.push(`        <i class="far fa-clock"></i><p class="fb_desc space">Доступные сеансы: </p>`);
+        string.push(`        <p class="fb_desc_value unwrap">${data[i][3]}</p>`);
         string.push(`    </div>`);
-        string.push(`    <a href='${data[i][4]}' class="more"> Детальніше...</a>`);
+        string.push(`    <a href='${data[i][4]}' class="buybutton"> Купить билет</a>`);
         string.push(`</div>`);
         string.push(`</div>`);
         string.push(`<br>`);
@@ -318,6 +314,6 @@ async function composeFilmButtonHTML(data) {
 
 
 
-module.exports.Initialize = Initialize;
+module.exports.Parse = Parse;
 module.exports.htmlFilms = htmlFilms;
 module.exports.composeFilmButtonData = composeFilmButtonData;

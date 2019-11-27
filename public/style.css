@@ -78,7 +78,7 @@ a {
   }
 
   a:active{
-    color: #dddddd;
+    
   }
 
 .bottom
@@ -102,15 +102,31 @@ a {
     margin-top: 45px;
     align-items: center;
     transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    justify-content: center;
 }
 
 .date-button
 {
     border-radius: 10px;
     padding: 1%;
-    height: 100%;   
+    height: 100%;
+    text-align: center;
     width: auto;
     background-color: white;
+    border: black;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    margin: 5%;
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+
+.date-button:active
+{
+    background-color: #cc8686;
+}
+
+.selected
+{
+    background-color: #cc8686;
 }
 
 .dates:hover {
@@ -118,7 +134,17 @@ a {
   }
 
 .date-button:hover{
-    background-color: #dddddd;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+.date{
+    font-style: italic;
+}
+
+.week-name
+{
+    padding-top: 10px;
+    font-size: 16pt;
 }
 
 .films-area
@@ -134,7 +160,7 @@ a {
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
     background-color: white;
     border-radius: 10px;
-    height: 250px;
+    height: 280px;
     line-height: 20px;   
     transition: all 0.3s cubic-bezier(.25,.8,.25,1); 
 }
@@ -156,6 +182,7 @@ a {
 .fb_desc_value
 {
     font-size: 16pt;
+    width: auto;
 }
 
 .text
@@ -169,6 +196,7 @@ a {
     display: flex;
     align-items: baseline;
     padding-left: 10px;
+    flex-wrap: wrap;
 }
 
 .more
@@ -184,7 +212,7 @@ img{
     height: 100%;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
-    width: 180px;
+    width: 200px;
     overflow: hidden;
 }
 
@@ -306,4 +334,57 @@ tr
     width: 100%; 
     padding-top: 10px;
     text-align: center;
+}
+
+.buybutton {
+    background-color:#ea0000;
+    border-radius:6px;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+	display:inline-block;
+	cursor:pointer;
+	color:white;
+	font-family:Arial;
+	font-size:15px;
+	font-weight:bold;
+	padding:6px 24px;
+    text-decoration:none;
+    justify-content: right;
+    margin-left: 0%;
+    
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+.buybutton:hover {
+    background-color:#de2c2c;
+    color:white;
+}
+.buybutton:active {
+	position:relative;
+	top:1px;
+}
+.unwrap{
+    display: inline-block;
+    height: 38px;
+    overflow: scroll;
+    flex-wrap: nowrap;
+}
+
+
+.film-title{
+    font-size: 24pt;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.unwrap::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Hide scrollbar for IE and Edge */
+  .unwrap {
+    -ms-overflow-style: none;
+  }
+
+.space
+{
+    margin-left: 10px;
 }

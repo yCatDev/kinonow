@@ -6,7 +6,7 @@ var dateFormat = require('dateformat');
 
 
 
-var days = ['Неділя', 'Понеділок', 'Вторник', 'Середа', 'Четверг', 'Пятниця', 'Суббота'];
+var days = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятниця', 'Суббота'];
 
 
 
@@ -21,13 +21,14 @@ function generatePage() {
     let htmlCode = '';
     if (req.params.date == undefined)
       req.params.date = dateFormat(new Date(), "dd-mm-yyyy");
-    await parser.Initialize(req.params.date).then((htmlFilms) => {
+    await parser.Parse(req.params.date).then((htmlFilms) => {
       htmlCode = htmlFilms;
     });
     var calendardates = [];
     var calendarnames = [];
     var date = new Date();
     for (let i = 0; i < 7; i++) {
+      
       calendardates[i] = dateFormat(date, "dd-mm-yyyy");
       calendarnames[i] = days[date.getDay()];
       date.setDate(date.getDate() + 1);
