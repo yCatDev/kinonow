@@ -361,10 +361,7 @@ tr
     background-color:#ff4949;
     color:white;
 }
-.buybutton:active {
-	position:relative;
-	top:1px;
-}
+
 .unwrap{
     display: inline-block;
     height: 38px;
