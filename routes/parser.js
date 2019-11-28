@@ -54,7 +54,7 @@ function composeFilmButtonData() {
 
     for (let i = 0; i < names.length; i++) {
         let buyLink = findLink(names[i]);                
-            if (prices[i]!=0 && buyLink!=undefined)
+            if ((prices[i]!=0 && prices[i]!=undefined)  && buyLink!=undefined)
         d.push(
             [names[i], mathMiddle(prices[i]), theatres[i].length,
             Array.from(new Set(dates[i])).join(', ') + "...", buyLink]
