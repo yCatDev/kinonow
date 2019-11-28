@@ -177,7 +177,9 @@ async function Parse(date) {
 
 function getTheatres() {
     for (let i = 0; i < names.length - 1; i++) {
-        theatres.push(data[1].slice(namesIndexes[i] + 1, namesIndexes[i + 1]));
+        let str = data[1].slice(namesIndexes[i] + 1, namesIndexes[i + 1]);
+        if (!theatres.includes(str))
+            theatres.push(str);
     }
 
 }
